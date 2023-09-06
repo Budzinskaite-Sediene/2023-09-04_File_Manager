@@ -62,6 +62,25 @@ if( isset($_GET['delete']) AND $_GET['delete'] != '') {
     }
 }
 
+if (isset($_GET['delete_folder']) && $_GET['delete_folder'] != '') {
+    $folder_to_delete = $_GET['delete_folder'];
+
+    // Check if the folder exists and is not the root directory
+    if (is_dir($folder_to_delete) && $folder_to_delete != './') {
+        // Attempt to delete the folder
+        if (rmdir($folder_to_delete)) {
+            // Folder deletion was successful
+            header('Location: ?dir=' . $dir . '&m=Folder deleted successfully');
+        } else {
+            // Folder deletion failed
+            header('Location: ?dir=' . $dir . '&m=Failed to delete folder');
+        }
+    } else {
+        // Invalid folder or trying to delete the root directory
+        header('Location: ?dir=' . $dir . '&m=Invalid folder or root directory cannot be deleted');
+    }
+}
+
 //Failo įkėlimas
 if( isset($_FILES['file_upload']) AND count($_FILES['file_upload']) > 0 ) {
     $tmpFile = $_FILES['file_upload']['tmp_name'];
@@ -165,7 +184,12 @@ unset($data[1]);
                             ?>
                         </td>
                         <td> <a href="?edit=<?= $path ?>&dir=<?= $dir ?>"><i class="fas fa-edit icon-color"></i></a> 
-                            <a href="?delete=<?= $path ?>&dir=<?= $dir ?>"><i class="fas fa-trash-alt icon-color"></i></a> 
+                          
+    <?php if (is_dir($path)) { ?>
+    <a href="?delete_folder=<?= $path ?>&dir=<?= $dir ?>" onclick="return confirm('Are you sure you want to delete this folder?')"><i class="fas fa-trash-alt icon-color"></i></a>
+<?php } else { ?>
+    <a href="?delete_file=<?= $path ?>&dir=<?= $dir ?>" onclick="return confirm('Are you sure you want to delete this file?')"><i class="fas fa-trash-alt icon-color"></i></a>
+<?php } ?>
                         </td>
                     </tr>
                 <?php } ?>
