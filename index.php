@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 $dir = './';
 $back_link = '';
 
@@ -18,9 +15,9 @@ if (isset($_GET['dir']) and $_GET['dir'] != '') {
         } else {
             $back_link = './';
         }
-        $back_link = '<tr>
-                            <td colspan="2"><a href="?dir=' . $back_link . '">Back to parent directory</a></td>
-                        </tr>';
+       $back_link = '<tr>
+        <td colspan="2"><a href="?dir=' . $back_link . '"><i class="fa fa-arrow-left icon-color"></i></a></td>
+    </tr>';
     }
 }
 
@@ -116,15 +113,17 @@ unset($data[1]);
                 <?php echo $back_link; ?>
                 <!-- Failų ir folderių sąrašqas -->
                 <?php
-                foreach ($data as $item) {
+    foreach ($data as $item) {
+        
+        if ($item === 'index.php'|| $item === 'style.css' || $item === '.git') {
+            continue;
+        }
 
-                    // $path = $dir === './' ? $item : $dir . '/' . $folder;
+        $path = $dir . '/' . $item;
 
-                    $path = $dir . '/' . $item;
-
-                    if ($dir === './') {
-                        $path = $item;
-                    }
+        if ($dir === './') {
+            $path = $item;
+        }
 
                     //Ikonų priskyrimas
                     $icon = 'folder';
@@ -153,8 +152,6 @@ unset($data[1]);
                             $icon = $file_formats[$filename];
                         }
                     }
-
-
                 ?>
                     <tr>
                         <td>
@@ -167,9 +164,9 @@ unset($data[1]);
                                 }
                             ?>
                         </td>
-   <td> <a href="?edit=<?= $path ?>&dir=<?= $dir ?>"><i class="fas fa-edit icon-color"></i></a> 
-   <a href="?delete=<?= $path ?>&dir=<?= $dir ?>"><i class="fas fa-trash-alt icon-color"></i></a> 
-</td>
+                        <td> <a href="?edit=<?= $path ?>&dir=<?= $dir ?>"><i class="fas fa-edit icon-color"></i></a> 
+                            <a href="?delete=<?= $path ?>&dir=<?= $dir ?>"><i class="fas fa-trash-alt icon-color"></i></a> 
+                        </td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -197,6 +194,7 @@ unset($data[1]);
                 <div class="mb-3">
                     <label>Select data type</label>
                     <select name="data_type" class="form-control">
+                        <option value="1">Select</option>
                         <option value="1">Folder</option>
                         <option value="2">File</option>
                         <option value="3">Upload</option>
