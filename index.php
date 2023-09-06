@@ -65,18 +65,17 @@ if( isset($_GET['delete']) AND $_GET['delete'] != '') {
 if (isset($_GET['delete_folder']) && $_GET['delete_folder'] != '') {
     $folder_to_delete = $_GET['delete_folder'];
 
-    // Check if the folder exists and is not the root directory
     if (is_dir($folder_to_delete) && $folder_to_delete != './') {
-        // Attempt to delete the folder
+    
         if (rmdir($folder_to_delete)) {
-            // Folder deletion was successful
+        
             header('Location: ?dir=' . $dir . '&m=Folder deleted successfully');
         } else {
-            // Folder deletion failed
+           
             header('Location: ?dir=' . $dir . '&m=Failed to delete folder');
         }
     } else {
-        // Invalid folder or trying to delete the root directory
+  
         header('Location: ?dir=' . $dir . '&m=Invalid folder or root directory cannot be deleted');
     }
 }
@@ -112,7 +111,7 @@ unset($data[1]);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="container mt-5">
     <h1>File manager</h1>
     <div class="container py-4">
         <?php if(isset($_GET['m']) AND $_GET['m'] != '') { ?>
