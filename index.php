@@ -21,20 +21,6 @@ if ( isset( $_GET[ 'dir' ] ) and $_GET[ 'dir' ] != '' ) {
     }
 }
 
-//Naujo Failo arba folderio pridėjimas
-
-if ( isset( $_POST[ 'data_type' ] ) and $_POST[ 'data_type' ] === '1' ) {
-    if ( isset( $_POST[ 'folder_name' ] ) and $_POST[ 'folder_name' ] != '' ) {
-        mkdir( $dir . '/' . $_POST[ 'folder_name' ] );
-        header( 'Location: ' . $_SERVER[ 'REQUEST_URI' ] );
-    }
-} else {
-    if ( isset( $_POST[ 'file_name' ] ) and $_POST[ 'file_name' ] != '' ) {
-        file_put_contents( $dir . '/' . $_POST[ 'file_name' ], $_POST[ 'file_contents' ] );
-        header( 'Location: ' . $_SERVER[ 'REQUEST_URI' ] );
-    }
-}
-
 //Failo pavadinimo keitimas
 if ( isset( $_POST[ 'file_name_edited' ] ) AND $_POST[ 'file_name_edited' ] != '' ) {
     $file_path = explode( '/', $_GET[ 'edit' ] );
@@ -130,7 +116,6 @@ function formatFileSize( $bytes, $decimals = 2 ) {
     </div>
     </div>
     <table class = 'table'>
-    <table class = 'table'>
     <thead>
     <tr>
     <th>Name</th>
@@ -199,7 +184,6 @@ function formatFileSize( $bytes, $decimals = 2 ) {
                 echo 'File not found.';
             }
         }
-
         ?>
         <tr>
         <td>
@@ -207,7 +191,6 @@ function formatFileSize( $bytes, $decimals = 2 ) {
         <input type = 'checkbox' class = 'form-check-input' name = 'delete[]' value = "<?= $path ?>">
         <i class = "bi bi-<?= $icon ?>"></i>
         <!-- Failo pavadinimas -->
-
         <?php
         if ( is_dir( $path ) ) {
             echo '<a href="?dir=' . $path . '">' . $item . '</a>';
@@ -233,10 +216,8 @@ function formatFileSize( $bytes, $decimals = 2 ) {
             <a href = "?download=<?= $path ?>"><i class = 'fas fa-download icon-color'></i></a>
             <?php }
             ?>
-
             <!-- Redagavimo ikona -->
             <a href = "?edit=<?= $path ?>&dir=<?= $dir ?>"><i class = 'fas fa-edit icon-color'></i></a>
-
             <!-- Ištrinti ikona -->
             <?php if ( is_dir( $path ) ) {
                 ?>
@@ -254,7 +235,6 @@ function formatFileSize( $bytes, $decimals = 2 ) {
                     ?>
                     </td>
                     </tr>
-
                     <?php }
                     ?>
                     </tbody>
@@ -262,9 +242,7 @@ function formatFileSize( $bytes, $decimals = 2 ) {
                     <!-- Failo pavadinimo redagavimo forma -->
                     <?php if ( isset( $_GET[ 'edit' ] ) ) {
                         ?>
-
                         <h2>Edit file name</h2>
-
                         <form method = 'POST'>
                         <!-- Jeigu norime gauti duomenis iš laukelio, tačiau šis neturi būti atvaizduojamas puslapyje, galime panaudoti type = 'hidden' variaciją -->
                         <!-- <input type = 'hidden' name = 'file_name_original' class = 'form-control' value = "<?= $_GET['edit'] ?>" /> -->
@@ -274,13 +252,10 @@ function formatFileSize( $bytes, $decimals = 2 ) {
                         </div>
                         <button class = 'btn btn-primary'>Submit</button>
                         </form>
-
                         <?php } else {
                             ?>
-
                             <?php }
                             ?>
                             </div>
                             </body>
-
                             </html>
