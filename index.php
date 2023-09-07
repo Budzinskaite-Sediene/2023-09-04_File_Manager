@@ -123,6 +123,13 @@ function formatFileSize( $bytes, $decimals = 2 ) {
     </div>
     <?php }
     ?>
+    <form method = 'POST' action = ''>
+    <div class = 'row mb-3'>
+    <div class = 'col'>
+    <button type = 'submit' class = 'btn btn-danger' name = 'delete_selected'>Delete selected</button>
+    </div>
+    </div>
+    <table class = 'table'>
     <table class = 'table'>
     <thead>
     <tr>
@@ -196,8 +203,11 @@ function formatFileSize( $bytes, $decimals = 2 ) {
         ?>
         <tr>
         <td>
-        <!-- Failo pavadinimas -->
+        <div class = 'form-check'>
+        <input type = 'checkbox' class = 'form-check-input' name = 'delete[]' value = "<?= $path ?>">
         <i class = "bi bi-<?= $icon ?>"></i>
+        <!-- Failo pavadinimas -->
+
         <?php
         if ( is_dir( $path ) ) {
             echo '<a href="?dir=' . $path . '">' . $item . '</a>';
@@ -217,7 +227,6 @@ function formatFileSize( $bytes, $decimals = 2 ) {
         ?>
         </td>
         <td>
-
         <!-- Parsisiųsti failo ikona -->
         <?php if ( !is_dir( $path ) ) {
             ?>
@@ -231,10 +240,16 @@ function formatFileSize( $bytes, $decimals = 2 ) {
             <!-- Ištrinti ikona -->
             <?php if ( is_dir( $path ) ) {
                 ?>
-                <a href = "?delete_folder=<?= $path ?>&dir=<?= $dir ?>" onclick = "return confirm('Ar tikrai norite ištrinti šį aplanką?')"><i class = 'fas fa-trash-alt icon-color'></i></a>
+                <a href = "?delete_folder=<?= $path ?>&dir=<?= $dir ?>"
+                onclick = "return confirm('Are you sure you want to delete this folder?')"><i
+
+                class = 'fas fa-trash-alt icon-color'></i></a>
                 <?php } else {
                     ?>
-                    <a href = "?delete_file=<?= $path ?>&dir=<?= $dir ?>" onclick = "return confirm('Ar tikrai norite ištrinti šį failą?')"><i class = 'fas fa-trash-alt icon-color'></i></a>
+                    <a href = "?delete_file=<?= $path ?>&dir=<?= $dir ?>"
+                    onclick = "return confirm('Are you sure you want to delete this file?')"><i
+
+                    class = 'fas fa-trash-alt icon-color'></i></a>
                     <?php }
                     ?>
                     </td>
