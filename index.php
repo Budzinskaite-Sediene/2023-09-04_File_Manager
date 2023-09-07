@@ -85,7 +85,21 @@ $data = scandir( $dir );
 unset( $data[ 0 ] );
 unset( $data[ 1 ] );
 
+function getFileSize( $filePath ) {
+    if ( file_exists( $filePath ) ) {
+        $size = filesize( $filePath );
+        return formatFileSize( $size );
+    }
+    return '-';
+}
+
+function formatFileSize( $bytes, $decimals = 2 ) {
+    $size = [ 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB' ];
+    $factor = floor( ( strlen( $bytes ) - 1 ) / 3 );
+    return sprintf( "%.{$decimals}f", $bytes / ( 1024 ** $factor ) ) . ' ' . @$size[ $factor ];
+}
 ?>
+
 <!DOCTYPE html>
 <html lang = 'en'>
 
@@ -113,6 +127,7 @@ unset( $data[ 1 ] );
     <thead>
     <tr>
     <th>Name</th>
+    <th>Size</th>
     <th>Actions</th>
     </tr>
     </thead>
@@ -177,6 +192,7 @@ unset( $data[ 1 ] );
                 echo 'File not found.';
             }
         }
+
         ?>
         <tr>
         <td>
@@ -191,7 +207,16 @@ unset( $data[ 1 ] );
         ?>
         </td>
         <td>
-        <!-- Visos ikonos grupuojamos šiame stulpelyje -->
+        <!-- Failo dydis -->
+        <?php
+        if ( is_dir( $path ) ) {
+            echo '-';
+        } else {
+            echo getFileSize( $path );
+        }
+        ?>
+        </td>
+        <td>
 
         <!-- Parsisiųsti failo ikona -->
         <?php if ( !is_dir( $path ) ) {
@@ -213,7 +238,6 @@ unset( $data[ 1 ] );
                     <?php }
                     ?>
                     </td>
-
                     </tr>
 
                     <?php }
