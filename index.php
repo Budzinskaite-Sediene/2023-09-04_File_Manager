@@ -37,35 +37,6 @@ if ( isset( $_POST[ 'file_name_edited' ] ) AND $_POST[ 'file_name_edited' ] != '
     header( 'Location: ?dir=' . $dir );
 }
 
-//Failų ir direktorijų ištrynimas
-if ( isset( $_GET[ 'delete' ] ) AND $_GET[ 'delete' ] != '' ) {
-    if ( $_GET[ 'delete' ] === basename( __FILE__ ) ) {
-        header( 'Location: ?dir=' . $dir . '&m=Cannot delete main file' );
-    } else {
-        unlink( $_GET[ 'delete' ] );
-
-        header( 'Location: ?dir=' . $dir );
-    }
-}
-
-if ( isset( $_GET[ 'delete_folder' ] ) && $_GET[ 'delete_folder' ] != '' ) {
-    $folder_to_delete = $_GET[ 'delete_folder' ];
-
-    if ( is_dir( $folder_to_delete ) && $folder_to_delete != './' ) {
-
-        if ( rmdir( $folder_to_delete ) ) {
-
-            header( 'Location: ?dir=' . $dir . '&m=Folder deleted successfully' );
-        } else {
-
-            header( 'Location: ?dir=' . $dir . '&m=Failed to delete folder' );
-        }
-    } else {
-
-        header( 'Location: ?dir=' . $dir . '&m=Invalid folder or root directory cannot be deleted' );
-    }
-}
-
 $data = scandir( $dir );
 
 unset( $data[ 0 ] );
@@ -110,6 +81,21 @@ function formatFileSize( $bytes, $decimals = 2 ) {
     <?php }
     ?>
     <form method = 'POST' action = ''>
+    <?php
+    if ( isset( $_POST[ 'delete_selected' ] ) && isset( $_POST[ 'delete' ] ) ) {
+        $files_to_delete = $_POST[ 'delete' ];
+        foreach ( $files_to_delete as $file ) {
+            if ( is_file( $file ) ) {
+                unlink( $file );
+                // Ištrinti failą
+            } elseif ( is_dir( $file ) ) {
+                rmdir( $file );
+                // Ištrinti aplanką
+            }
+        }
+        header( 'Location: ?dir=' . $dir );
+    }
+    ?>
     <div class = 'row mb-3'>
     <div class = 'col'>
     <button type = 'submit' class = 'btn btn-danger' name = 'delete_selected'>Delete selected</button>
@@ -220,42 +206,39 @@ function formatFileSize( $bytes, $decimals = 2 ) {
             <a href = "?edit=<?= $path ?>&dir=<?= $dir ?>"><i class = 'fas fa-edit icon-color'></i></a>
             <!-- Ištrinti ikona -->
             <?php if ( is_dir( $path ) ) {
-                ?>
-                <a href = "?delete_folder=<?= $path ?>&dir=<?= $dir ?>"
-                onclick = "return confirm('Are you sure you want to delete this folder?')"><i
+                $delete_link = '?delete_folder=' . urlencode( $path ) . '&dir=' . urlencode( $dir );
+                $delete_confirm_message = 'Are you sure you want to delete this folder?';
+            } else {
+                $delete_link = '?delete_file=' . urlencode( $path ) . '&dir=' . urlencode( $dir );
+                $delete_confirm_message = 'Are you sure you want to delete this file?';
+            }
+            ?>
 
-                class = 'fas fa-trash-alt icon-color'></i></a>
+            <a href = "<?= $delete_link ?>" onclick = "return confirm('<?= $delete_confirm_message ?>')"><i class = 'fas fa-trash-alt icon-color'></i></a>
+
+            </td>
+            </tr>
+            <?php }
+            ?>
+            </tbody>
+            </table>
+            <!-- Failo pavadinimo redagavimo forma -->
+            <?php if ( isset( $_GET[ 'edit' ] ) ) {
+                ?>
+                <h2>Edit file name</h2>
+                <form method = 'POST'>
+                <!-- Jeigu norime gauti duomenis iš laukelio, tačiau šis neturi būti atvaizduojamas puslapyje, galime panaudoti type = 'hidden' variaciją -->
+                <!-- <input type = 'hidden' name = 'file_name_original' class = 'form-control' value = "<?= $_GET['edit'] ?>" /> -->
+                <div class = 'mb-3'>
+                <label>New File Name</label>
+                <input type = 'text' name = 'file_name_edited' class = 'form-control' />
+                </div>
+                <button class = 'btn btn-primary'>Submit</button>
+                </form>
                 <?php } else {
                     ?>
-                    <a href = "?delete_file=<?= $path ?>&dir=<?= $dir ?>"
-                    onclick = "return confirm('Are you sure you want to delete this file?')"><i
-
-                    class = 'fas fa-trash-alt icon-color'></i></a>
                     <?php }
                     ?>
-                    </td>
-                    </tr>
-                    <?php }
-                    ?>
-                    </tbody>
-                    </table>
-                    <!-- Failo pavadinimo redagavimo forma -->
-                    <?php if ( isset( $_GET[ 'edit' ] ) ) {
-                        ?>
-                        <h2>Edit file name</h2>
-                        <form method = 'POST'>
-                        <!-- Jeigu norime gauti duomenis iš laukelio, tačiau šis neturi būti atvaizduojamas puslapyje, galime panaudoti type = 'hidden' variaciją -->
-                        <!-- <input type = 'hidden' name = 'file_name_original' class = 'form-control' value = "<?= $_GET['edit'] ?>" /> -->
-                        <div class = 'mb-3'>
-                        <label>New File Name</label>
-                        <input type = 'text' name = 'file_name_edited' class = 'form-control' />
-                        </div>
-                        <button class = 'btn btn-primary'>Submit</button>
-                        </form>
-                        <?php } else {
-                            ?>
-                            <?php }
-                            ?>
-                            </div>
-                            </body>
-                            </html>
+                    </div>
+                    </body>
+                    </html>
