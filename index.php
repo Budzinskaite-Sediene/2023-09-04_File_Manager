@@ -98,8 +98,12 @@ function formatFileSize( $bytes, $decimals = 2 ) {
     ?>
     <div class = 'row mb-3'>
     <div class = 'col'>
+    <div class = 'col'>
+    <button type = 'button' class = 'btn btn-primary' id = 'select-all-checkboxes'>Select All</button>
+    </div>
     <button type = 'submit' class = 'btn btn-danger' name = 'delete_selected'>Delete selected</button>
     </div>
+
     </div>
     <table class = 'table'>
     <thead>
@@ -240,5 +244,20 @@ function formatFileSize( $bytes, $decimals = 2 ) {
                     <?php }
                     ?>
                     </div>
-                    </body>
-                    </html>
+                    <script>
+                    document.addEventListener( 'DOMContentLoaded', function() {
+                        const selectAllButton = document.getElementById( 'select-all-checkboxes' );
+                        const checkboxes = document.querySelectorAll( 'input[type="checkbox"][name^="delete[]"]' );
+
+                        selectAllButton.addEventListener( 'click', function() {
+                            checkboxes.forEach( function( checkbox ) {
+                                checkbox.checked = true;
+                            }
+                        );
+                    }
+                );
+            }
+        );
+        </script>
+        </body>
+        </html>
