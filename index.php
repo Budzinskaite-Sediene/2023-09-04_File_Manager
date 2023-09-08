@@ -100,7 +100,7 @@ function formatFileSize( $bytes, $decimals = 2 ) {
     <div class = 'col'>
     <div class = 'col'>
     <button type = 'button' class = 'btn btn-primary' id = 'select-all-checkboxes'>Select All</button>
-    </div>
+
     <button type = 'submit' class = 'btn btn-danger' name = 'delete_selected'>Delete selected</button>
     </div>
 
@@ -258,6 +258,20 @@ function formatFileSize( $bytes, $decimals = 2 ) {
                 );
             }
         );
+        document.addEventListener('DOMContentLoaded', function () {
+    const selectAllButton = document.getElementById('select-all-checkboxes');
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="delete[]"]');
+
+    let allChecked = false;
+
+    selectAllButton.addEventListener('click', function () {
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = !allChecked; // Pakeičia checkbox būseną (pažymi/atžymi)
+        });
+
+        allChecked = !allChecked; // Pakeičia visų checkboxų būseną
+    });
+});
         </script>
         </body>
         </html>
