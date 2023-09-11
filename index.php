@@ -197,6 +197,29 @@ function formatFileSize( $bytes, $decimals = 2 ) {
         } else {
             echo getFileSize( $path );
         }
+
+        if (isset($_GET['delete_file']) && isset($_GET['dir'])) {
+    $fileToDelete = $_GET['delete_file'];
+    $dir = $_GET['dir'];
+    
+    if (file_exists($fileToDelete)) {
+        unlink($fileToDelete);
+        header('Location: ?dir=' . $dir);
+        exit;
+    }
+}
+
+if (isset($_GET['delete_folder']) && isset($_GET['dir'])) {
+    $folderToDelete = $_GET['delete_folder'];
+    $dir = $_GET['dir'];
+    
+    if (is_dir($folderToDelete)) {
+        rmdir($folderToDelete);
+        header('Location: ?dir=' . $dir);
+        exit;
+    }
+}
+
         ?>
         </td>
         <td>
@@ -209,17 +232,14 @@ function formatFileSize( $bytes, $decimals = 2 ) {
             <!-- Redagavimo ikona -->
             <a href = "?edit=<?= $path ?>&dir=<?= $dir ?>"><i class = 'fas fa-edit icon-color'></i></a>
             <!-- Ištrinti ikona -->
-            <?php if ( is_dir( $path ) ) {
-                $delete_link = '?delete_folder=' . urlencode( $path ) . '&dir=' . urlencode( $dir );
-                $delete_confirm_message = 'Are you sure you want to delete this folder?';
-            } else {
-                $delete_link = '?delete_file=' . urlencode( $path ) . '&dir=' . urlencode( $dir );
-                $delete_confirm_message = 'Are you sure you want to delete this file?';
-            }
-            ?>
-
-            <a href = "<?= $delete_link ?>" onclick = "return confirm('<?= $delete_confirm_message ?>')"><i class = 'fas fa-trash-alt icon-color'></i></a>
-
+          <?php if (is_dir($path)) {
+        $delete_link = '?delete_folder=' . urlencode($path) . '&dir=' . urlencode($dir);
+        $delete_confirm_message = 'Are you sure you want to delete this folder?';
+    } else {
+        $delete_link = '?delete_file=' . urlencode($path) . '&dir=' . urlencode($dir);
+        $delete_confirm_message = 'Are you sure you want to delete this file?';
+    } ?>
+    <a href="<?= $delete_link ?>" onclick="return confirm('<?= $delete_confirm_message ?>')"><i class='fas fa-trash-alt icon-color'></i></a>
             </td>
             </tr>
             <?php }
