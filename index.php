@@ -220,6 +220,8 @@ if (isset($_GET['delete_folder']) && isset($_GET['dir'])) {
     }
 }
 
+
+
         ?>
         </td>
         <td>
