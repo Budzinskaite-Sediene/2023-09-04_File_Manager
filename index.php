@@ -29,9 +29,6 @@ if ( isset( $_POST[ 'file_name_edited' ] ) AND $_POST[ 'file_name_edited' ] != '
 
     $to = implode( '/', $file_path );
 
-    //pavadinimo redagavimo eilutė panaudojant basename funkciją
-    //$newFile = str_replace( basename( $_GET[ 'edit' ] ), $_POST[ 'file_name_edited' ], $_GET[ 'edit' ] );
-
     rename( $_GET[ 'edit' ], $to );
 
     header( 'Location: ?dir=' . $dir );
@@ -55,6 +52,21 @@ function formatFileSize( $bytes, $decimals = 2 ) {
     $factor = floor( ( strlen( $bytes ) - 1 ) / 3 );
     return sprintf( "%.{$decimals}f", $bytes / ( 1024 ** $factor ) ) . ' ' . @$size[ $factor ];
 }
+
+//prideti nauja faila/folderį:
+
+if (isset($_POST['data_type']) and $_POST['data_type'] === '1') {
+    if (isset($_POST['folder_name']) and $_POST['folder_name'] != '') {
+        mkdir($dir . '/' . $_POST['folder_name']);
+        header('Location: ' . $_SERVER['REQUEST_URI']);
+    }
+} else {
+    if (isset($_POST['file_name']) and $_POST['file_name'] != '') {
+        file_put_contents($dir . '/' . $_POST['file_name'], $_POST['file_contents']);
+        header('Location: ' . $_SERVER['REQUEST_URI']);
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -220,8 +232,6 @@ if (isset($_GET['delete_folder']) && isset($_GET['dir'])) {
     }
 }
 
-
-
         ?>
         </td>
         <td>
@@ -248,13 +258,42 @@ if (isset($_GET['delete_folder']) && isset($_GET['dir'])) {
             ?>
             </tbody>
             </table>
+            <h2>Create New File or Folder</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <label>Select data type</label>
+                <select name="data_type" class="form-control">
+                    <option value="1">Folder</option>
+                    <option value="2">File</option>
+                </select>
+            </div>
+            <div class="folder">
+                <div class="mb-3">
+                    <label>Folder name</label>
+                    <input type="text" name="folder_name" class="form-control" />
+                </div>
+            </div>
+            <div class="file">
+                <div class="mb-3">
+                    <label>File name</label>
+                    <input type="text" name="file_name" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label>File contents</label>
+                    <textarea name="file_contents" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-primary">Add</button>
+            </div>
+        </form>
+    </div>
             <!-- Failo pavadinimo redagavimo forma -->
             <?php if ( isset( $_GET[ 'edit' ] ) ) {
                 ?>
                 <h2>Edit file name</h2>
                 <form method = 'POST'>
-                <!-- Jeigu norime gauti duomenis iš laukelio, tačiau šis neturi būti atvaizduojamas puslapyje, galime panaudoti type = 'hidden' variaciją -->
-                <!-- <input type = 'hidden' name = 'file_name_original' class = 'form-control' value = "<?= $_GET['edit'] ?>" /> -->
+               
                 <div class = 'mb-3'>
                 <label>New File Name</label>
                 <input type = 'text' name = 'file_name_edited' class = 'form-control' />
@@ -288,10 +327,10 @@ if (isset($_GET['delete_folder']) && isset($_GET['dir'])) {
 
     selectAllButton.addEventListener('click', function () {
         checkboxes.forEach(function (checkbox) {
-            checkbox.checked = !allChecked; // Pakeičia checkbox būseną (pažymi/atžymi)
+            checkbox.checked = !allChecked; 
         });
 
-        allChecked = !allChecked; // Pakeičia visų checkboxų būseną
+        allChecked = !allChecked; 
     });
 });
         </script>
